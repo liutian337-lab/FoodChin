@@ -1,0 +1,441 @@
+/* ==========================================================================
+   全局基础重置与滚动条优化
+   ========================================================================== */
+html, body, div, p, ul, li, img, h3, h4 {
+  padding: 0;
+  margin: 0;
+}
+
+html, body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden; /* 彻底移除最外层大浏览器窗口的滚动条 */
+}
+
+body > section {
+  height: 100%;
+}
+
+/* 主内容区域背景与滚动条精细控制 */
+main.el-main {
+  background: #f8f9fa;
+  padding: 24px 40px; /* 增加左右两侧的留白，解决内容太靠右的问题 */
+  height: calc(100vh - 60px); /* 减去 Header 的 60px 高度 */
+  box-sizing: border-box;
+  overflow-y: auto; /* 只允许主内容区域这一个地方产生纵向滚动条 */
+}
+
+/* ==========================================================================
+   【登录与角色选择页】
+   ========================================================================== */
+.login {
+  box-sizing: border-box;
+  width: 75%;
+  max-width: 1140px;
+  margin: 8% auto;
+  padding: 0 15px;
+}
+
+.login h3 {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 500;
+  color: #212529;
+  margin-bottom: 50px;
+  letter-spacing: 1px;
+}
+
+.login div.el-col div {
+  background: #ffffff;
+  height: 140px;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  line-height: 140px;
+  font-weight: 500;
+  font-size: 16px;
+  color: #495057;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.215, 0.610, 0.355, 1);
+}
+
+.login div.el-col div:hover {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  transform: translateY(-6px);
+  color: #00b651;
+}
+
+.is-login {
+  box-sizing: border-box;
+  margin: 12% auto 0;
+  background: #ffffff;
+  width: 480px;
+  height: auto;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+}
+
+.is-login h3 {
+  font-size: 19px;
+  color: #212529;
+  margin-bottom: 24px;
+  font-weight: 500;
+}
+
+.is-login div {
+  color: #495057;
+  margin: 12px 0;
+  font-size: 15px;
+}
+
+.is-login div span {
+  color: #212529;
+  font-weight: 500;
+  margin-left: 8px;
+}
+
+.is-login .el-button--primary {
+  margin-top: 24px;
+  width: 100%;
+  border-radius: 8px;
+  padding: 12px 20px;
+  background-color: #00b651;
+  border-color: #00b651;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.is-login .el-button--primary:hover {
+  background-color: #009a44;
+  border-color: #009a44;
+  box-shadow: 0 4px 12px rgba(0, 182, 81, 0.2);
+}
+
+/* ==========================================================================
+   【头部导航区域】（解决右上角字太小的问题）
+   ========================================================================== */
+.header {
+  display: flex;
+  align-items: center;
+  padding: 0 40px; /* 与下方主内容区的间距对齐 */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+div.header h3 {
+  margin-left: 15px;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+div.header img {
+  width: 56px;
+  height: auto;
+}
+
+.aside, .header {
+  background: #212529;
+  color: #ffffff;
+  width: 100%;
+}
+
+/* 右上角“消费者”等角色文本样式放大 */
+.header > span.user-name {
+  flex-grow: 1;
+  text-align: right;
+  font-size: 16px; /* 字体加大，更清晰醒目 */
+  font-weight: 500;
+  color: #ffffff;
+  padding-right: 10px;
+}
+
+/* 全局统一的右侧退出按钮样式调整（解决按钮太小、死贴右边的问题） */
+button.button-logout {
+  float: right;
+  border-radius: 6px !important;
+  padding: 10px 20px !important; /* 加大内边距，让按钮回归正常饱满的尺寸 */
+  font-size: 14px !important;    /* 字号加大 */
+  font-weight: 500 !important;
+  margin-right: 10px;            /* 给最右侧留出精致安全的空白距离 */
+}
+
+button.button-logout::after {
+  content: '';
+  display: block;
+  clear: right;
+}
+
+/* ==========================================================================
+   【表格与全局数据输入】
+   ========================================================================== */
+.el-table {
+  margin-top: 25px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+  overflow: hidden;
+}
+
+.el-table th {
+  background-color: #fdfdfd !important;
+  color: #495057 !important;
+  font-weight: 600 !important;
+  height: 50px;
+}
+
+.el-table td, .el-table th {
+  text-align: center;
+  border-bottom: 1px solid #f1f3f5 !important;
+}
+
+.el-input {
+  width: 220px;
+  margin-right: 15px;
+}
+
+.el-input .el-input__inner {
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  transition: border-color 0.2s ease;
+}
+
+.el-input .el-input__inner:focus {
+  border-color: #00b651;
+}
+/* ==========================================================================
+   消费者查询页 & 时间线截断错位彻底修复
+   ========================================================================== */
+
+/* 页面整体大框架布局 */
+.consumer-container {
+  display: flex;
+  box-sizing: border-box;
+}
+
+/* 左侧搜索框卡片美化 */
+.consumer-left-box {
+  background: #fff;
+  border: 1px solid #eef2f5;
+  border-top: 6px solid #00b651;
+  padding: 30px 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  height: auto;
+  box-sizing: border-box;
+}
+.consumer-left-box h4 {
+  font-size: 16px;
+  color: #333;
+}
+.consumer-left-box .search-btn {
+  background: #00b651 !important;
+  border-color: #00b651 !important;
+  width: 100%;
+}
+
+/* 右侧白底大面板 */
+.consumer-right-box {
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #eef2f5;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* 右上角固定退出按钮包裹容器 */
+.consumer-logout-wrap {
+  padding: 15px 20px 5px 0;
+  text-align: right;
+  z-index: 10;
+  background: #fff;
+}
+
+/* 专职内部平滑滚动的容器 */
+.consumer-scroll-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 40px 40px 40px; /* 四周预留足够呼吸空间，绝不截断 */
+  box-sizing: border-box;
+}
+
+/* 提示文本居中 */
+.consumer-tip {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: #999;
+  font-size: 15px;
+}
+
+/* 修复红框核心：解除原本固定 40px 的高度魔咒，允许行高根据地址长短自适应撑开 */
+.fooddetail .content > div,
+.el-timeline-item__content > div {
+  display: flex;
+  align-items: flex-start; /* 顶部对齐 */
+  padding: 12px 0;         /* 用间距代替死高 */
+  border-bottom: 1px dashed #edf2f7; /* 每行增加柔和的虚线分割 */
+  height: auto !important; /* 强制覆盖原有死高限制 */
+}
+
+/* 最后一项去掉底边虚线 */
+.fooddetail .content > div:last-child,
+.el-timeline-item__content > div:last-child {
+  border-bottom: none;
+}
+
+/* 左侧标题项（如：分销商地址、入库时间） */
+.trace-content div > span:nth-child(1) {
+  width: 120px;
+  flex: 0 0 120px; /* 固定左侧宽度 */
+  color: #718096;
+  font-weight: 500;
+  text-align: left;
+}
+
+/* 右侧具体内容（如：十六进制长地址、时间字符串） */
+.trace-content div > span:nth-child(2) {
+  flex: 1;
+  color: #2d3748;
+  text-align: left !important;  /* 改为靠左对齐，看长哈希地址更直观 */
+  word-break: break-all;       /* 核心：遇到长地址自动换行，绝不向右撑爆溢出 */
+  padding-left: 20px;
+}
+
+/* ElementUI 时间线样式微调，对齐绿点 */
+.el-timeline-item__content {
+  top: -4px;
+}
+.el-timeline-item__tail {
+  border-left: 2px dashed #cbd5e0;
+}
+.el-timeline-item__node--normal {
+  left: 1px;
+  background-color: #00b651;
+}
+
+/* ==========================================================================
+   【溯源卡片与时间线详情】
+   ========================================================================== */
+.tracedetail {
+  margin: 0 2%;
+  padding-top: 10px;
+}
+
+.trace-title {
+  color: #00b651;
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f1f3f5;
+}
+
+.fooddetail {
+  background: #f8f9fa;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+}
+
+.fooddetail h4 {
+  font-size: 15px;
+  color: #212529;
+  margin-bottom: 18px;
+  font-weight: 600;
+  border-left: 3px solid #00b651;
+  padding-left: 8px;
+}
+
+.trace-content div {
+  display: flex;
+  align-items: center;
+  height: 38px;
+  font-size: 14px;
+  border-bottom: 1px dashed #e9ecef;
+}
+
+.trace-content div:last-child {
+  border-bottom: none;
+}
+
+.trace-content div > span:nth-child(1) {
+  color: #6c757d;
+  flex: 0 0 120px;
+  text-align: left;
+}
+
+.trace-content div > span:nth-child(2) {
+  color: #212529;
+  flex: 1;
+  text-align: right;
+  font-weight: 500;
+}
+
+.trace-timeline {
+  padding-left: 5px;
+  margin-top: 20px;
+}
+
+.tracedetail h4 {
+  font-size: 15px;
+  color: #212529;
+  margin-bottom: 20px;
+  font-weight: 600;
+  border-left: 3px solid #00b651;
+  padding-left: 8px;
+}
+
+.el-timeline-item {
+  padding-bottom: 15px !important;
+}
+
+.el-timeline-item__content > div {
+  background: #ffffff;
+}
+
+.el-timeline-item__tail {
+  border-left: 2px dashed #dee2e6 !important;
+}
+
+.el-timeline-item__node {
+  background-color: #00b651 !important;
+}
+
+.el-timeline-no-node .el-timeline-item__node {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* ==========================================================================
+   【其他全局组件控制】
+   ========================================================================== */
+.detail-dialog .el-dialog__header {
+  padding: 20px 20px 10px;
+  border-bottom: 1px solid #f1f3f5;
+}
+
+.el-dialog {
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+.el-dialog__title {
+  font-size: 17px !important;
+  font-weight: 500 !important;
+  color: #212529 !important;
+}
