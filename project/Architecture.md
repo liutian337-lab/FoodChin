@@ -4,6 +4,9 @@
 
 ```text
 demo
+├── application
+│   ├── FoodApplicationService.java
+│   └── TraceApplicationService.java
 ├── common
 │   └── Result.java
 ├── config
@@ -30,8 +33,8 @@ demo
 ## Dependency graph
 
 ```text
-FoodController ──> FoodService ──> BlockchainService ──> WeBASE-Front
-TraceController ─> TraceService ─┬> FoodService
+FoodController ──> FoodApplicationService ──> FoodService ──> BlockchainService ──> WeBASE-Front
+TraceController ─> TraceApplicationService ──> TraceService ─┬> FoodService
                                  └> BlockchainService ──> WeBASE-Front
 BlockchainController
 EvaluationController ───────────> EvaluationService
@@ -54,6 +57,8 @@ BlockchainProperties <────────── application.yml
 `FoodService` performs legacy food request validation and transforms chain responses into the existing frontend response payloads.
 
 `TraceService` performs legacy trace update and query orchestration, including distribution and retail transition payloads.
+
+`FoodApplicationService` and `TraceApplicationService` convert controller DTOs into the existing service payloads and coordinate service calls. They contain no new business rules.
 
 `BlockchainService` is the exclusive WeBASE-Front client. It builds contract invocation requests, applies the configured timeout, and provides read helpers for the existing Trace contract.
 
