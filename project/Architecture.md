@@ -21,6 +21,9 @@ demo
 │   ├── request
 │   ├── response
 │   └── vo
+├── vo
+│   ├── FoodDetailVO.java
+│   └── TraceabilityVO.java
 ├── exception
 │   └── GlobalExceptionHandler.java
 └── service
@@ -60,6 +63,8 @@ BlockchainProperties <────────── application.yml
 
 `FoodApplicationService` and `TraceApplicationService` convert controller DTOs into the existing service payloads and coordinate service calls. They contain no new business rules.
 
+Food and traceability query responses are mapped from legacy service JSON into VOs in the Application layer, then serialized back to the legacy response schema for frontend compatibility.
+
 `BlockchainService` is the exclusive WeBASE-Front client. It builds contract invocation requests, applies the configured timeout, and provides read helpers for the existing Trace contract.
 
 `EvaluationService` is intentionally empty in Sprint 1.1. No AI or evaluation feature is introduced.
@@ -71,3 +76,9 @@ All pre-existing route paths, HTTP methods, request field names, and successful-
 ## Configuration
 
 All blockchain environment values are located in `src/main/resources/application.yml` under `blockchain`. Every value can be overridden by its corresponding `BLOCKCHAIN_*` environment variable. `BlockchainProperties` binds those settings through `@ConfigurationProperties`.
+
+Blockchain configuration is grouped into `webase`, `contract`, `accounts`, and `network`. `WEBASE_URL` remains supported for deployments that already supply a full endpoint; otherwise the endpoint is assembled from `WEBASE_PROTOCOL`, `WEBASE_HOST`, `WEBASE_PORT`, and `WEBASE_TRANSACTION_PATH`.
+
+## Blockchain infrastructure
+
+`demo.infrastructure.blockchain.BlockchainService` is the infrastructure port used by domain services. `FiscoBlockchainServiceImpl` is its WeBASE/FISCO BCOS adapter. It owns all HTTP request construction, ABI use, RPC interaction, timeout handling, and account selection. `FoodService` and `TraceService` depend only on the interface and `BlockchainAccount` enum.

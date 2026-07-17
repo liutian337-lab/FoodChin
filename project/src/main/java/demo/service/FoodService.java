@@ -3,6 +3,9 @@ package demo.service;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import demo.exception.BusinessException;
+import demo.infrastructure.blockchain.BlockchainAccount;
+import demo.infrastructure.blockchain.BlockchainService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,9 +18,9 @@ public class FoodService {
 
     public String userInfo(String userName) {
         JSONObject output = new JSONObject();
-        if ("producer".equals(userName)) output.set("address", blockchainService.getProducerAddress());
-        else if ("distributor".equals(userName)) output.set("address", blockchainService.getDistributorAddress());
-        else if ("retailer".equals(userName)) output.set("address", blockchainService.getRetailerAddress());
+        if ("producer".equals(userName)) output.set("address", blockchainService.accountAddress(BlockchainAccount.PRODUCER));
+        else if ("distributor".equals(userName)) output.set("address", blockchainService.accountAddress(BlockchainAccount.DISTRIBUTOR));
+        else if ("retailer".equals(userName)) output.set("address", blockchainService.accountAddress(BlockchainAccount.RETAILER));
         else output.set("error", "user not found");
         return JSONUtil.toJsonStr(output);
     }
@@ -34,8 +37,8 @@ public class FoodService {
             parameters.add(traceNumber);
             parameters.add(traceName);
             parameters.add(quality);
-            JSONObject chainResponse = JSONUtil.parseObj(blockchainService.invoke(
-                    blockchainService.getProducerAddress(), "newFood", parameters));
+            JSONObject chainResponse = JSONUtil.parseObj(blockchainService.write(
+                    BlockchainAccount.PRODUCER, "newFood", parameters));
             if ("Success".equals(chainResponse.getStr("message"))) {
                 output.set("code", 200); output.set("ret", 1); output.set("msg", "食品添加成功"); output.set("data", chainResponse);
             } else {
@@ -71,8 +74,8 @@ public class FoodService {
     }
 
     String foodInternal(String traceNumber) {
-        JSONArray food = blockchainService.getFood(traceNumber);
-        JSONArray traceInfo = blockchainService.getTraceInfo(traceNumber);
+        JSONArray food = blockchainService.queryFood(traceNumber);
+        JSONArray traceInfo = blockchainService.queryTraceInfo(traceNumber);
         int records = traceInfo.isEmpty() ? 0 : traceInfo.getJSONArray(0).size();
         JSONObject output = new JSONObject();
         output.set("traceNumber", traceNumber);
@@ -87,13 +90,13 @@ public class FoodService {
     }
 
     JSONArray foodIdentifiers() {
-        JSONArray response = blockchainService.getAllFood();
+        JSONArray response = blockchainService.queryAllFood();
         return response.getJSONArray(0);
     }
 
     JSONArray traceRecords(String traceNumber) {
-        JSONArray food = blockchainService.getFood(traceNumber);
-        JSONArray traceInfo = blockchainService.getTraceInfo(traceNumber);
+        JSONArray food = blockchainService.queryFood(traceNumber);
+        JSONArray traceInfo = blockchainService.queryTraceInfo(traceNumber);
         JSONArray timestamps = traceInfo.getJSONArray(0);
         JSONArray names = traceInfo.getJSONArray(1);
         JSONArray addresses = traceInfo.getJSONArray(2);
@@ -120,39 +123,39 @@ public class FoodService {
 
     static void validateTraceNumber(String value) {
         try {
-            if (value == null || Integer.parseInt(value) <= 0) throw new IllegalArgumentException("invalid parameter");
-        } catch (NumberFormatException exception) { throw new IllegalArgumentException("invalid parameter"); }
+            if (value == null || Integer.parseInt(value) <= 0) throw new BusinessException("invalid parameter");
+        } catch (NumberFormatException exception) { throw new BusinessException("invalid parameter"); }
     }
 
     static int positiveInt(JSONObject request, String field) {
-        if (request == null || !request.containsKey(field)) throw new IllegalArgumentException(field + " 是必填字段");
+        if (request == null || !request.containsKey(field)) throw new BusinessException(field + " 是必填字段");
         Object value = request.get(field);
         try {
             long number = Long.parseLong(String.valueOf(value));
-            if (number <= 0 || number > Integer.MAX_VALUE) throw new IllegalArgumentException(field + " 必须是有效正整数");
+            if (number <= 0 || number > Integer.MAX_VALUE) throw new BusinessException(field + " 必须是有效正整数");
             return (int) number;
-        } catch (NumberFormatException exception) { throw new IllegalArgumentException(field + " 必须是有效正整数"); }
+        } catch (NumberFormatException exception) { throw new BusinessException(field + " 必须是有效正整数"); }
     }
 
     static String requiredString(JSONObject request, String field) {
         String value = request == null ? null : request.getStr(field);
-        if (value == null || value.trim().isEmpty()) throw new IllegalArgumentException(field + " 是必填字段");
+        if (value == null || value.trim().isEmpty()) throw new BusinessException(field + " 是必填字段");
         return value;
     }
 
     static int quality(JSONObject request) {
         int value = positiveOrZeroInt(request, "quality");
-        if (value > 2) throw new IllegalArgumentException("quality 必须是 0、1 或 2");
+        if (value > 2) throw new BusinessException("quality 必须是 0、1 或 2");
         return value;
     }
 
     private static int positiveOrZeroInt(JSONObject request, String field) {
-        if (request == null || !request.containsKey(field)) throw new IllegalArgumentException(field + " 是必填字段");
+        if (request == null || !request.containsKey(field)) throw new BusinessException(field + " 是必填字段");
         try {
             int value = Integer.parseInt(String.valueOf(request.get(field)));
-            if (value < 0) throw new IllegalArgumentException(field + " 必须是 0、1 或 2");
+            if (value < 0) throw new BusinessException(field + " 必须是 0、1 或 2");
             return value;
-        } catch (NumberFormatException exception) { throw new IllegalArgumentException(field + " 必须是 0、1 或 2"); }
+        } catch (NumberFormatException exception) { throw new BusinessException(field + " 必须是 0、1 或 2"); }
     }
 
     private String messageOrDefault(JSONObject response) {

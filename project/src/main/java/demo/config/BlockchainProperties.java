@@ -4,35 +4,84 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "blockchain")
 public class BlockchainProperties {
-    private String webaseUrl;
-    private String contractName;
-    private String contractAddress;
-    private String contractAbi;
-    private String producerAddress;
-    private String distributorAddress;
-    private String retailerAddress;
-    private int groupId;
-    private boolean useCns;
-    private int timeoutMs;
+    private Webase webase = new Webase();
+    private Contract contract = new Contract();
+    private Accounts accounts = new Accounts();
+    private Network network = new Network();
 
-    public String getWebaseUrl() { return webaseUrl; }
-    public void setWebaseUrl(String webaseUrl) { this.webaseUrl = webaseUrl; }
-    public String getContractName() { return contractName; }
-    public void setContractName(String contractName) { this.contractName = contractName; }
-    public String getContractAddress() { return contractAddress; }
-    public void setContractAddress(String contractAddress) { this.contractAddress = contractAddress; }
-    public String getContractAbi() { return contractAbi; }
-    public void setContractAbi(String contractAbi) { this.contractAbi = contractAbi; }
-    public String getProducerAddress() { return producerAddress; }
-    public void setProducerAddress(String producerAddress) { this.producerAddress = producerAddress; }
-    public String getDistributorAddress() { return distributorAddress; }
-    public void setDistributorAddress(String distributorAddress) { this.distributorAddress = distributorAddress; }
-    public String getRetailerAddress() { return retailerAddress; }
-    public void setRetailerAddress(String retailerAddress) { this.retailerAddress = retailerAddress; }
-    public int getGroupId() { return groupId; }
-    public void setGroupId(int groupId) { this.groupId = groupId; }
-    public boolean isUseCns() { return useCns; }
-    public void setUseCns(boolean useCns) { this.useCns = useCns; }
-    public int getTimeoutMs() { return timeoutMs; }
-    public void setTimeoutMs(int timeoutMs) { this.timeoutMs = timeoutMs; }
+    public String getWebaseUrl() { return webase.getUrl(); }
+    public String getContractName() { return contract.getName(); }
+    public String getContractAddress() { return contract.getAddress(); }
+    public String getContractAbi() { return contract.getAbi(); }
+    public String getProducerAddress() { return accounts.getProducer(); }
+    public String getDistributorAddress() { return accounts.getDistributor(); }
+    public String getRetailerAddress() { return accounts.getRetailer(); }
+    public int getGroupId() { return network.getGroupId(); }
+    public boolean isUseCns() { return network.isUseCns(); }
+    public int getTimeoutMs() { return network.getTimeoutMs(); }
+    public Webase getWebase() { return webase; }
+    public void setWebase(Webase webase) { this.webase = webase; }
+    public Contract getContract() { return contract; }
+    public void setContract(Contract contract) { this.contract = contract; }
+    public Accounts getAccounts() { return accounts; }
+    public void setAccounts(Accounts accounts) { this.accounts = accounts; }
+    public Network getNetwork() { return network; }
+    public void setNetwork(Network network) { this.network = network; }
+
+    public static class Webase {
+        private String protocol;
+        private String host;
+        private int port;
+        private String transactionPath;
+        private String url;
+        public String getUrl() {
+            if (url != null && !url.trim().isEmpty()) return url;
+            return protocol + "://" + host + ":" + port + transactionPath;
+        }
+        public String getProtocol() { return protocol; }
+        public void setProtocol(String protocol) { this.protocol = protocol; }
+        public String getHost() { return host; }
+        public void setHost(String host) { this.host = host; }
+        public int getPort() { return port; }
+        public void setPort(int port) { this.port = port; }
+        public String getTransactionPath() { return transactionPath; }
+        public void setTransactionPath(String transactionPath) { this.transactionPath = transactionPath; }
+        public void setUrl(String url) { this.url = url; }
+    }
+
+    public static class Contract {
+        private String name;
+        private String address;
+        private String abi;
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
+        public String getAddress() { return address; }
+        public void setAddress(String address) { this.address = address; }
+        public String getAbi() { return abi; }
+        public void setAbi(String abi) { this.abi = abi; }
+    }
+
+    public static class Accounts {
+        private String producer;
+        private String distributor;
+        private String retailer;
+        public String getProducer() { return producer; }
+        public void setProducer(String producer) { this.producer = producer; }
+        public String getDistributor() { return distributor; }
+        public void setDistributor(String distributor) { this.distributor = distributor; }
+        public String getRetailer() { return retailer; }
+        public void setRetailer(String retailer) { this.retailer = retailer; }
+    }
+
+    public static class Network {
+        private int groupId;
+        private boolean useCns;
+        private int timeoutMs;
+        public int getGroupId() { return groupId; }
+        public void setGroupId(int groupId) { this.groupId = groupId; }
+        public boolean isUseCns() { return useCns; }
+        public void setUseCns(boolean useCns) { this.useCns = useCns; }
+        public int getTimeoutMs() { return timeoutMs; }
+        public void setTimeoutMs(int timeoutMs) { this.timeoutMs = timeoutMs; }
+    }
 }

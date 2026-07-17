@@ -1,8 +1,11 @@
 package demo.application;
 
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import demo.dto.request.TraceUpdateRequest;
 import demo.service.TraceService;
+import demo.vo.TraceabilityVO;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,7 +17,7 @@ public class TraceApplicationService {
     }
 
     public String trace(String traceNumber) {
-        return traceService.trace(traceNumber);
+        return toTraceabilityResponse(traceService.trace(traceNumber));
     }
 
     public String addDistribution(TraceUpdateRequest request) {
@@ -26,15 +29,15 @@ public class TraceApplicationService {
     }
 
     public String latestTraceList() {
-        return traceService.latestTraceList();
+        return toTraceabilityResponse(traceService.latestTraceList());
     }
 
     public String distributing() {
-        return traceService.distributing();
+        return toTraceabilityResponse(traceService.distributing());
     }
 
     public String retailing() {
-        return traceService.retailing();
+        return toTraceabilityResponse(traceService.retailing());
     }
 
     private JSONObject toPayload(TraceUpdateRequest request) {
@@ -45,5 +48,14 @@ public class TraceApplicationService {
             payload.set("quality", request.getQuality());
         }
         return payload;
+    }
+
+    private String toTraceabilityResponse(String legacyResponse) {
+        JSONArray legacyItems = JSONUtil.parseArray(legacyResponse);
+        JSONArray response = new JSONArray();
+        for (Object item : legacyItems) {
+            response.add(TraceabilityVO.fromJson(JSONUtil.parseObj(item)).toLegacyJson());
+        }
+        return JSONUtil.toJsonStr(response);
     }
 }

@@ -3,6 +3,8 @@ package demo.service;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import demo.infrastructure.blockchain.BlockchainAccount;
+import demo.infrastructure.blockchain.BlockchainService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,11 +23,11 @@ public class TraceService {
     }
 
     public String addDistribution(JSONObject request) {
-        return addTrace(request, blockchainService.getDistributorAddress(), "addTraceInfoByDistributor", "分销信息添加成功");
+        return addTrace(request, BlockchainAccount.DISTRIBUTOR, "addTraceInfoByDistributor", "分销信息添加成功");
     }
 
     public String addRetail(JSONObject request) {
-        return addTrace(request, blockchainService.getRetailerAddress(), "addTraceInfoByRetailer", "零售信息添加成功");
+        return addTrace(request, BlockchainAccount.RETAILER, "addTraceInfoByRetailer", "零售信息添加成功");
     }
 
     public String latestTraceList() {
@@ -49,7 +51,7 @@ public class TraceService {
         return JSONUtil.toJsonStr(result);
     }
 
-    private String addTrace(JSONObject request, String account, String functionName, String successMessage) {
+    private String addTrace(JSONObject request, BlockchainAccount account, String functionName, String successMessage) {
         JSONObject output = new JSONObject();
         try {
             int traceNumber = FoodService.positiveInt(request, "traceNumber");
@@ -57,7 +59,7 @@ public class TraceService {
             int quality = FoodService.quality(request);
             JSONArray parameters = new JSONArray();
             parameters.add(traceNumber); parameters.add(traceName); parameters.add(quality);
-            JSONObject chainResponse = JSONUtil.parseObj(blockchainService.invoke(account, functionName, parameters));
+            JSONObject chainResponse = JSONUtil.parseObj(blockchainService.write(account, functionName, parameters));
             if ("Success".equals(chainResponse.getStr("message"))) {
                 output.set("code", 200); output.set("ret", 1); output.set("msg", successMessage);
             } else {

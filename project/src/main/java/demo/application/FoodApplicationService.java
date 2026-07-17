@@ -1,8 +1,12 @@
 package demo.application;
 
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import demo.dto.request.FoodProduceRequest;
 import demo.service.FoodService;
+import demo.vo.FoodDetailVO;
+import demo.vo.TraceabilityVO;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,14 +33,26 @@ public class FoodApplicationService {
     }
 
     public String foodList() {
-        return foodService.foodList();
+        JSONArray legacyItems = JSONUtil.parseArray(foodService.foodList());
+        JSONArray response = new JSONArray();
+        for (Object item : legacyItems) {
+            JSONObject food = JSONUtil.parseObj(item);
+            response.add(JSONUtil.toJsonStr(FoodDetailVO.fromJson(food).toLegacyJson()));
+        }
+        return JSONUtil.toJsonStr(response);
     }
 
     public String food(String traceNumber) {
-        return foodService.food(traceNumber);
+        JSONObject food = JSONUtil.parseObj(foodService.food(traceNumber));
+        return JSONUtil.toJsonStr(FoodDetailVO.fromJson(food).toLegacyJson());
     }
 
     public String producing() {
-        return foodService.producing();
+        JSONArray legacyItems = JSONUtil.parseArray(foodService.producing());
+        JSONArray response = new JSONArray();
+        for (Object item : legacyItems) {
+            response.add(TraceabilityVO.fromJson(JSONUtil.parseObj(item)).toLegacyJson());
+        }
+        return JSONUtil.toJsonStr(response);
     }
 }
