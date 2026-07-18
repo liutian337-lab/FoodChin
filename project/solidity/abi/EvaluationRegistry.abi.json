@@ -1,0 +1,66 @@
+[
+  {
+    "constant": false,
+    "inputs": [
+      {"name": "foodId", "type": "uint256"},
+      {"name": "evaluationHash", "type": "bytes32"},
+      {"name": "score", "type": "uint256"},
+      {"name": "level", "type": "string"},
+      {"name": "confidence", "type": "uint256"},
+      {"name": "modelVersion", "type": "string"},
+      {"name": "evaluationTime", "type": "uint256"}
+    ],
+    "name": "recordEvaluation",
+    "outputs": [{"name": "evaluationId", "type": "uint256"}],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [{"name": "evaluationId", "type": "uint256"}],
+    "name": "getEvaluation",
+    "outputs": [
+      {"name": "", "type": "uint256"},
+      {"name": "", "type": "uint256"},
+      {"name": "", "type": "bytes32"},
+      {"name": "", "type": "uint256"},
+      {"name": "", "type": "string"},
+      {"name": "", "type": "uint256"},
+      {"name": "", "type": "string"},
+      {"name": "", "type": "uint256"},
+      {"name": "", "type": "address"}
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [{"name": "foodId", "type": "uint256"}],
+    "name": "getFoodEvaluations",
+    "outputs": [{"name": "", "type": "uint256[]"}],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [{"name": "", "type": "uint256"}],
+    "name": "foodEvaluationCount",
+    "outputs": [{"name": "", "type": "uint256"}],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true, "name": "evaluationId", "type": "uint256"},
+      {"indexed": true, "name": "foodId", "type": "uint256"},
+      {"indexed": false, "name": "evaluationHash", "type": "bytes32"}
+    ],
+    "name": "EvaluationRecorded",
+    "type": "event"
+  }
+]

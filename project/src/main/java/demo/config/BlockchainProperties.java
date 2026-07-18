@@ -6,27 +6,37 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class BlockchainProperties {
     private Webase webase = new Webase();
     private Contract contract = new Contract();
+    private Contract evaluationContract = new Contract();
     private Accounts accounts = new Accounts();
     private Network network = new Network();
+    private Evaluation evaluation = new Evaluation();
 
     public String getWebaseUrl() { return webase.getUrl(); }
     public String getContractName() { return contract.getName(); }
     public String getContractAddress() { return contract.getAddress(); }
     public String getContractAbi() { return contract.getAbi(); }
+    public String getEvaluationContractName() { return evaluationContract.getName(); }
+    public String getEvaluationContractAddress() { return evaluationContract.getAddress(); }
+    public String getEvaluationContractAbi() { return evaluationContract.getAbi(); }
     public String getProducerAddress() { return accounts.getProducer(); }
     public String getDistributorAddress() { return accounts.getDistributor(); }
     public String getRetailerAddress() { return accounts.getRetailer(); }
     public int getGroupId() { return network.getGroupId(); }
     public boolean isUseCns() { return network.isUseCns(); }
     public int getTimeoutMs() { return network.getTimeoutMs(); }
+    public String getEvaluationAnchorFunction() { return evaluation.getAnchorFunction(); }
     public Webase getWebase() { return webase; }
     public void setWebase(Webase webase) { this.webase = webase; }
     public Contract getContract() { return contract; }
     public void setContract(Contract contract) { this.contract = contract; }
+    public Contract getEvaluationContract() { return evaluationContract; }
+    public void setEvaluationContract(Contract evaluationContract) { this.evaluationContract = evaluationContract; }
     public Accounts getAccounts() { return accounts; }
     public void setAccounts(Accounts accounts) { this.accounts = accounts; }
     public Network getNetwork() { return network; }
     public void setNetwork(Network network) { this.network = network; }
+    public Evaluation getEvaluation() { return evaluation; }
+    public void setEvaluation(Evaluation evaluation) { this.evaluation = evaluation; }
 
     public static class Webase {
         private String protocol;
@@ -83,5 +93,11 @@ public class BlockchainProperties {
         public void setUseCns(boolean useCns) { this.useCns = useCns; }
         public int getTimeoutMs() { return timeoutMs; }
         public void setTimeoutMs(int timeoutMs) { this.timeoutMs = timeoutMs; }
+    }
+
+    public static class Evaluation {
+        private String anchorFunction;
+        public String getAnchorFunction() { return anchorFunction; }
+        public void setAnchorFunction(String anchorFunction) { this.anchorFunction = anchorFunction; }
     }
 }

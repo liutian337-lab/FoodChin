@@ -1,6 +1,23 @@
 server:
   port: ${SERVER_PORT:8080}
 
+ai:
+  url: ${AI_SERVICE_URL:http://127.0.0.1:8000}
+
+spring:
+  datasource:
+    url: ${FOODCHIN_DB_URL:jdbc:mariadb://127.0.0.1:13306/foodchin?useUnicode=true&characterEncoding=utf8}
+    username: ${FOODCHIN_DB_USERNAME:foodchin_app}
+    password: ${FOODCHIN_DB_PASSWORD:}
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDB103Dialect
+
 blockchain:
   webase:
     protocol: ${WEBASE_PROTOCOL:http}
@@ -12,6 +29,10 @@ blockchain:
     name: ${BLOCKCHAIN_CONTRACT_NAME:Trace}
     address: ${BLOCKCHAIN_CONTRACT_ADDRESS:0xa76a7636fbd955670372cf40e469c680aeacadc0}
     abi: '[{"constant":true,"inputs":[{"name":"traceNumber","type":"uint256"}],"name":"getFood","outputs":[{"name":"","type":"uint256"},{"name":"","type":"string"},{"name":"","type":"string"},{"name":"","type":"string"},{"name":"","type":"address"},{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"traceNumber","type":"uint256"}],"name":"getTraceInfo","outputs":[{"name":"","type":"uint256[]"},{"name":"","type":"string[]"},{"name":"","type":"address[]"},{"name":"","type":"uint8[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"name","type":"string"},{"name":"traceNumber","type":"uint256"},{"name":"traceName","type":"string"},{"name":"quality","type":"uint8"}],"name":"newFood","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"traceNumber","type":"uint256"},{"name":"traceName","type":"string"},{"name":"quality","type":"uint8"}],"name":"addTraceInfoByDistributor","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"traceNumber","type":"uint256"},{"name":"traceName","type":"string"},{"name":"quality","type":"uint8"}],"name":"addTraceInfoByRetailer","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getAllFood","outputs":[{"name":"","type":"uint256[]"}],"payable":false,"stateMutability":"view","type":"function"}]'
+  evaluation-contract:
+    name: ${BLOCKCHAIN_EVALUATION_CONTRACT_NAME:EvaluationRegistry}
+    address: ${BLOCKCHAIN_EVALUATION_CONTRACT_ADDRESS:}
+    abi: '${BLOCKCHAIN_EVALUATION_CONTRACT_ABI:[{"constant":false,"inputs":[{"name":"foodId","type":"uint256"},{"name":"evaluationHash","type":"bytes32"},{"name":"score","type":"uint256"},{"name":"level","type":"string"},{"name":"confidence","type":"uint256"},{"name":"modelVersion","type":"string"},{"name":"evaluationTime","type":"uint256"}],"name":"recordEvaluation","outputs":[{"name":"evaluationId","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"}]}'
   accounts:
     producer: ${BLOCKCHAIN_PRODUCER_ADDRESS:0x230e0f8413bbf1b593379c55c2e318c72a01844d}
     distributor: ${BLOCKCHAIN_DISTRIBUTOR_ADDRESS:0x95ecd0a068193bb0b8a1044fc6180b126cd971a6}
@@ -20,3 +41,5 @@ blockchain:
     group-id: ${BLOCKCHAIN_GROUP_ID:1}
     use-cns: ${BLOCKCHAIN_USE_CNS:false}
     timeout-ms: ${BLOCKCHAIN_TIMEOUT_MS:10000}
+  evaluation:
+    anchor-function: ${BLOCKCHAIN_EVALUATION_ANCHOR_FUNCTION:recordEvaluation}
